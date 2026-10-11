@@ -1,0 +1,13 @@
+name = "os"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[[durable_objects.bindings]]
+name = "AGENT_STATE_DO"
+class_name = "AgentStateDO"
+
+# Durable Object migrations. Bump the tag and add a new [[migrations]] block
+# whenever a new Durable Object class is introduced.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["AgentStateDO"]
