@@ -1,4 +1,4 @@
-import type { Stat } from '../data'
+import type { Stat } from '../types'
 
 type Props = { stat: Stat }
 

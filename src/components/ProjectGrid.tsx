@@ -1,6 +1,17 @@
-import { projects } from '../data'
+import { relativeTime } from '../format'
+import type { Project } from '../types'
 
-export default function ProjectGrid() {
+type Props = { projects: Project[] }
+
+export default function ProjectGrid({ projects }: Props) {
+  if (projects.length === 0) {
+    return (
+      <p className="rounded-2xl border border-dashed border-zinc-300 bg-white px-5 py-12 text-center text-sm text-zinc-500">
+        No projects yet — create the first one above.
+      </p>
+    )
+  }
+
   return (
     <section className="grid gap-4 sm:grid-cols-2">
       {projects.map((project) => (
@@ -42,7 +53,9 @@ export default function ProjectGrid() {
                 {tag}
               </span>
             ))}
-            <span className="ml-auto text-[11px] text-zinc-400">Updated {project.updated}</span>
+            <span className="ml-auto text-[11px] text-zinc-400">
+              Updated {relativeTime(project.updatedAt)}
+            </span>
           </div>
         </article>
       ))}

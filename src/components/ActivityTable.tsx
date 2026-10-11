@@ -1,4 +1,5 @@
-import type { Activity, Status } from '../data'
+import { relativeTime } from '../format'
+import type { Activity, Status } from '../types'
 
 const statusStyles: Record<Status, string> = {
   Success: 'bg-emerald-50 text-emerald-700',
@@ -24,7 +25,9 @@ export default function ActivityTable({ rows, query = '' }: Props) {
         <div>
           <h2 className="text-sm font-semibold tracking-tight text-zinc-900">Recent activity</h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            {query.trim() ? `${rows.length} matching “${query.trim()}”` : 'Latest events across your workspace'}
+            {query.trim()
+              ? `${rows.length} matching “${query.trim()}”`
+              : 'Latest events across your workspace'}
           </p>
         </div>
         <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-medium text-zinc-600">
@@ -50,7 +53,7 @@ export default function ActivityTable({ rows, query = '' }: Props) {
                   <span className="font-medium text-zinc-900">{item.target}</span>
                 </p>
                 <p className="mt-0.5 text-xs text-zinc-500">
-                  {item.env} · {item.time}
+                  {item.env} · {relativeTime(item.createdAt)}
                 </p>
               </div>
 

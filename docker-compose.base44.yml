@@ -1,31 +1,103 @@
 name: base44-os
 
+x-node-dev: &node-dev
+  restart: on-failure
+  environment:
+    # Supplied by the platform; empty/unset outside the sandbox.
+    - BASE44_PREVIEW_MODE
+    - CI=true
+  command:
+    - sh
+    - -ec
+    - |
+      if [ -f package-lock.json ]; then
+        npm ci --no-audit --no-fund
+      else
+        npm install --no-audit --no-fund
+      fi
+      exec npm run dev
+
 services:
-  web:
+  db:
+    image: postgres:16-alpine
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=base44
+      - POSTGRES_PASSWORD=base44_dev
+      - POSTGRES_DB=base44
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U base44 -d base44"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # One-shot schema + seed. Both SQL files are idempotent, so this is safe to
+  # re-run on every start.
+  migrate:
+    image: postgres:16-alpine
+    environment:
+      - PGPASSWORD=base44_dev
+    volumes:
+      - ./server/db:/db:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - sh
+      - -ec
+      - psql -v ON_ERROR_STOP=1 -h db -U base44 -d base44 -f /db/schema.sql -f /db/seed.sql
+
+  api:
+    <<: *node-dev
     image: node:22
     working_dir: /app
-    restart: on-failure
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/app
+      - api_node_modules:/app/node_modules
+    environment:
+      - BASE44_PREVIEW_MODE
+      - CI=true
+      - PORT=4000
+      - DATABASE_URL=postgres://base44:base44_dev@db:5432/base44
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:4000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+
+  web:
+    <<: *node-dev
+    image: node:22
+    working_dir: /app
     ports:
       - "3000:5173"
     volumes:
       - ./:/app
       - web_node_modules:/app/node_modules
     environment:
-      # Supplied by the platform; empty/unset outside the sandbox.
       - BASE44_PREVIEW_MODE
       # Vite >= 6.1 appends this to server.allowedHosts so the preview host works.
       - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
       - CI=true
-    command:
-      - sh
-      - -ec
-      - |
-        if [ -f package-lock.json ]; then
-          npm ci --no-audit --no-fund
-        else
-          npm install --no-audit --no-fund
-        fi
-        exec npm run dev
+      - API_PROXY_TARGET=http://api:4000
+    depends_on:
+      api:
+        condition: service_started
     healthcheck:
       test:
         - CMD
@@ -38,4 +110,6 @@ services:
       start_period: 120s
 
 volumes:
+  db_data:
+  api_node_modules:
   web_node_modules:

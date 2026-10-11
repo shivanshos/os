@@ -1,11 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { createProject, fetchActivity, fetchProjects, fetchStats } from './api'
 import ActivityTable from './components/ActivityTable'
+import NewProjectForm from './components/NewProjectForm'
 import ProjectGrid from './components/ProjectGrid'
 import SettingsPanel from './components/SettingsPanel'
 import Sidebar, { type ViewId } from './components/Sidebar'
 import StatCard from './components/StatCard'
 import TopBar from './components/TopBar'
-import { activity, stats } from './data'
+import type { Activity, Project, Stat } from './types'
 
 const pipeline = [
   { label: 'Install dependencies', state: 'done' },
@@ -14,9 +16,55 @@ const pipeline = [
   { label: 'Publish to preview', state: 'pending' },
 ]
 
+type LoadStatus = 'loading' | 'ready' | 'error'
+
 export default function App() {
   const [view, setView] = useState<ViewId>('overview')
   const [query, setQuery] = useState('')
+  const [status, setStatus] = useState<LoadStatus>('loading')
+  const [stats, setStats] = useState<Stat[]>([])
+  const [activity, setActivity] = useState<Activity[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
+
+  const load = useCallback(async () => {
+    setStatus('loading')
+    try {
+      const [nextStats, nextActivity, nextProjects] = await Promise.all([
+        fetchStats(),
+        fetchActivity(),
+        fetchProjects(),
+      ])
+      setStats(nextStats)
+      setActivity(nextActivity)
+      setProjects(nextProjects)
+      setStatus('ready')
+    } catch (error) {
+      console.error('Failed to load workspace data', error)
+      setStatus('error')
+    }
+  }, [])
+
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  const refresh = useCallback(async () => {
+    try {
+      const [nextActivity, nextProjects] = await Promise.all([fetchActivity(), fetchProjects()])
+      setActivity(nextActivity)
+      setProjects(nextProjects)
+    } catch (error) {
+      console.error('Failed to refresh workspace data', error)
+    }
+  }, [])
+
+  const handleCreateProject = useCallback(
+    async (input: { name: string; description: string; tags: string[] }) => {
+      await createProject(input)
+      await refresh()
+    },
+    [refresh],
+  )
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -26,7 +74,7 @@ export default function App() {
         field.toLowerCase().includes(needle),
       ),
     )
-  }, [query])
+  }, [activity, query])
 
   return (
     <div className="flex min-h-screen">
@@ -36,7 +84,28 @@ export default function App() {
         <TopBar view={view} onViewChange={setView} query={query} onQueryChange={setQuery} />
 
         <main className="flex-1 px-6 py-6 lg:px-10 lg:py-8">
-          {view === 'overview' && (
+          {status === 'loading' && (
+            <p className="text-sm text-zinc-500">Loading workspace…</p>
+          )}
+
+          {status === 'error' && (
+            <div className="max-w-md rounded-2xl border border-rose-200 bg-rose-50 p-5">
+              <h2 className="text-sm font-semibold text-rose-900">Can’t reach the API</h2>
+              <p className="mt-1 text-xs leading-relaxed text-rose-700">
+                The workspace data could not be loaded. Check that the API service is
+                running, then try again.
+              </p>
+              <button
+                type="button"
+                onClick={() => void load()}
+                className="mt-4 rounded-xl bg-rose-600 px-3 py-2 text-xs font-medium text-white hover:bg-rose-700"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
+          {status === 'ready' && view === 'overview' && (
             <div className="space-y-6">
               <header>
                 <h2 className="text-xl font-semibold tracking-tight text-zinc-900">
@@ -95,19 +164,21 @@ export default function App() {
             </div>
           )}
 
-          {view === 'projects' && (
+          {status === 'ready' && view === 'projects' && (
             <div className="space-y-6">
               <header>
                 <h2 className="text-xl font-semibold tracking-tight text-zinc-900">Projects</h2>
                 <p className="mt-1 text-sm text-zinc-500">
-                  Four projects in this workspace, ordered by recent activity.
+                  {projects.length} project{projects.length === 1 ? '' : 's'} stored in the
+                  workspace database.
                 </p>
               </header>
-              <ProjectGrid />
+              <NewProjectForm onCreate={handleCreateProject} />
+              <ProjectGrid projects={projects} />
             </div>
           )}
 
-          {view === 'activity' && (
+          {status === 'ready' && view === 'activity' && (
             <div className="space-y-6">
               <header>
                 <h2 className="text-xl font-semibold tracking-tight text-zinc-900">Activity</h2>
@@ -119,7 +190,7 @@ export default function App() {
             </div>
           )}
 
-          {view === 'settings' && (
+          {status === 'ready' && view === 'settings' && (
             <div className="space-y-6">
               <header>
                 <h2 className="text-xl font-semibold tracking-tight text-zinc-900">Settings</h2>
