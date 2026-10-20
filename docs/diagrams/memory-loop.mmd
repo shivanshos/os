@@ -1,0 +1,11 @@
+flowchart TD
+    O["Open project on any platform"] --> R["Retrieve authorized current records"]
+    R --> W["Perform bounded work"]
+    W --> H["Save output and session handoff"]
+    H --> M["Propose durable memory"]
+    M --> V{"Validated or confirmed?"}
+    V -->|Yes| C["Reconcile canonical state"]
+    V -->|No| P["Retain proposal and evidence"]
+    P -. "Pending status only" .-> C
+    C --> N["Resume on another platform"]
+    N --> R

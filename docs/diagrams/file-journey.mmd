@@ -1,0 +1,12 @@
+flowchart TD
+    F["Create, capture or import"] --> I["Intake and permission check"]
+    I --> ID["Register identity and provenance"]
+    ID --> C["Classify and propose route"]
+    C --> Q{"Classification and handling clear?"}
+    Q -->|Yes| D["Choose canonical destination"]
+    Q -->|No| R["Review queue"]
+    R -. "After review" .-> D
+    D --> S["Save with revision checks"]
+    S --> V["Verify destination and content"]
+    V --> X["Update registry and scoped search"]
+    X --> H["Return verified receipt and handoff"]

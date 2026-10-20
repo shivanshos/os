@@ -1,0 +1,159 @@
+<div id="os-system-flow">
+  <style>
+    #os-system-flow { color:var(--foreground); }
+    #os-system-flow .os-title { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+    #os-system-flow .os-title h2 { margin:0; }
+    #os-system-flow .os-canvas { width:100%; margin-top:16px; }
+    #os-system-flow svg { width:100%; display:block; overflow:visible; }
+    #os-system-flow svg text { fill:var(--foreground); font-size:12px; font-weight:400; }
+    #os-system-flow svg .os-node-title { font-weight:500; }
+    #os-system-flow svg .os-sub { fill:var(--muted-foreground); }
+    #os-system-flow .os-detail { margin-top:14px; min-height:44px; }
+    #os-system-flow .os-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; }
+    #os-system-flow .os-swatch { display:inline-block; width:20px; border-top:1px solid var(--muted-foreground); vertical-align:middle; margin-right:6px; }
+    #os-system-flow .os-swatch.dashed { border-top-style:dashed; }
+    #os-system-flow svg a:focus rect { stroke:var(--ring); stroke-width:2; }
+  </style>
+  <div class="os-title"><h2>How OS connects your work</h2><span class="text-small text-muted">Target architecture · not deployed</span></div>
+  <div class="nav nav-pills" role="tablist" aria-label="OS flow diagrams">
+    <button class="nav-link active" type="button" id="os-map-tab" role="tab" aria-controls="os-map-panel" aria-selected="true">System map</button>
+    <button class="nav-link" type="button" id="os-file-tab" role="tab" aria-controls="os-file-panel" aria-selected="false">File journey</button>
+    <button class="nav-link" type="button" id="os-memory-tab" role="tab" aria-controls="os-memory-panel" aria-selected="false">Memory loop</button>
+  </div>
+  <div id="os-map-panel" role="tabpanel" aria-labelledby="os-map-tab">
+    <div class="os-canvas" data-diagram="map"></div>
+  </div>
+  <div id="os-file-panel" role="tabpanel" aria-labelledby="os-file-tab" hidden>
+    <div class="os-canvas" data-diagram="file"></div>
+  </div>
+  <div id="os-memory-panel" role="tabpanel" aria-labelledby="os-memory-tab" hidden>
+    <div class="os-canvas" data-diagram="memory"></div>
+  </div>
+  <div class="os-legend text-small text-muted"><span><span class="os-swatch"></span>Request / content / result</span><span><span class="os-swatch dashed"></span>Alternative or review path</span></div>
+  <div id="os-selected-detail" class="os-detail" aria-live="polite"><span class="text-small text-muted">Select an element to see its responsibility.</span></div>
+  <script>
+  (() => {
+    const root = document.getElementById('os-system-flow');
+    const detail = root.querySelector('#os-selected-detail');
+    const NS = 'http://www.w3.org/2000/svg';
+    const diagrams = {
+      map: {
+        title:'OS architecture: clients, access paths, policy, core services and destinations',
+        rows:[
+          [{id:'you',title:'You + your devices',sub:'iPhone · Spectre / Chrome · gateway',detail:'You choose the project and task; the gateway links resources, while each device provides capture and access.'}],
+          [{id:'cloudai',title:'Cloud AI',sub:'ChatGPT · Claude\nGemini · Perplexity',detail:'Cloud AI tools retrieve project context and produce work through the capabilities available on your account.'},{id:'agents',title:'Local agents',sub:'Antigravity\nOllama agent / WebUI',detail:'Antigravity builds and operates the local setup; an agent around Ollama supplies retrieval and file tools.'},{id:'native',title:'Research + creation',sub:'Acrobat · NotebookLM\nFigma · Adobe\nNotion · Obsidian\nBase44 · Replit',detail:'Research, design, notes and app builders retain their native sources; selected outputs and references enter the shared workspace.'}],
+          [{id:'mcp',title:'MCP interface',sub:'Compatible AI clients',detail:'MCP exposes scoped tools, context resources and prompts; it is an interface, not the memory store.'},{id:'api',title:'HTTP API + CLI',sub:'Apps · scripts · n8n',detail:'The API and CLI give workflows the same registration, search and verified-save operations as MCP clients.'},{id:'fallback',title:'Native / manual bridge',sub:'Connectors · Files\nexport / upload',detail:'Platforms without the OS connection use their native connector or an explicit export; ingestion reconciles those changes later.'}],
+          [{id:'policy',title:'Identity + policy gate',sub:'Who? Which project? Which operation?',detail:'The policy layer checks user identity, project permissions, destination and operation before data is read or changed.'}],
+          [{id:'core',title:'OS Workspace Core',sub:'Register · retrieve · classify · save · reconcile',detail:'One shared service coordinates file identity, tags, source retrieval, save verification and current-state reconciliation.'}],
+          [{id:'sources',title:'Canonical sources',sub:'Drive documents\nGit + native designs',detail:'Drive owns shared documents; Git owns code; native tools own editable designs. The registry links their authoritative versions.'},{id:'records',title:'Registry + memory',sub:'IDs · tags · provenance\ndecisions · preferences',detail:'The registry stores identity and events; curated memory stores validated context. Search indexes are rebuildable views.'},{id:'execution',title:'Execution resources',sub:'n8n · HPC / Ollama\nclouds · devices',detail:'Approved workers run bounded workflows or compute jobs; device actions and infrastructure changes require their own authority.'}],
+          [{id:'receipt',title:'Verified result + handoff',sub:'Source links · revision · outcome · next action',detail:'The result returns with evidence of what was saved or executed, and a handoff lets the next platform resume.'}]
+        ],
+        edges:[['you','cloudai'],['you','agents'],['you','native'],['cloudai','mcp'],['cloudai','fallback',true],['agents','mcp'],['agents','api'],['native','fallback'],['mcp','policy'],['api','policy'],['fallback','policy',true],['policy','core'],['core','sources'],['core','records'],['core','execution'],['sources','receipt'],['records','receipt'],['execution','receipt']]
+      },
+      file: {
+        title:'File lifecycle from capture through classification, review, persistence and verification',
+        rows:[
+          [{id:'capture',title:'Create / capture / import',sub:'AI output · Chrome download · iPhone · export',detail:'New content enters through an actual save, completed download, upload or provider event; disconnected chats are not captured automatically.'}],
+          [{id:'intake',title:'Intake + permission check',sub:'Completion · owner · project access',detail:'Intake ignores incomplete files and checks access and allowed processing before reading or sending content to a classifier.'}],
+          [{id:'identify',title:'Register identity + provenance',sub:'UUID · original name · source · revision · hash',detail:'The service assigns or resolves identity, preserves the original name and records source and revision. Duplicate bytes do not automatically mean the same asset.'}],
+          [{id:'classify',title:'Classify + propose a route',sub:'Project · kind · topics · lifecycle · sensitivity',detail:'Explicit project context and deterministic rules come first. Unknown fields stay unknown and private handling is the default.'}],
+          [{id:'clear',title:'Classification clear',sub:'Policy permits routing',detail:'A complete, policy-eligible classification can route to its declared destination.'},{id:'review',title:'Ambiguous / restricted',sub:'INBOX / REVIEW',detail:'Uncertain files remain in review. Sensitive content cannot be sent to an unapproved external classifier.'}],
+          [{id:'destination',title:'Choose canonical destination',sub:'Project SOURCES / WORKING / OUTPUTS\nor LIBRARY / MEDIA / TEMPLATES',detail:'The content role chooses the destination. Project-owned media stays with its project; related collections use references rather than copies.'}],
+          [{id:'persist',title:'Save / update / export',sub:'Check revision · preserve source relationships',detail:'The service checks concurrent changes and preserves export_of or derived_from relationships; it never blindly overwrites another version.'}],
+          [{id:'verify',title:'Verify destination',sub:'Content · provider ID · revision · permissions',detail:'A transfer is complete only after destination verification. Failed saves retain local bytes and a retry record.'}],
+          [{id:'index',title:'Update registry + scoped search',sub:'Tags · events · freshness · transfer receipt',detail:'Metadata and events become searchable within the permitted scope. Failed metadata registration remains visibly incomplete.'}],
+          [{id:'done',title:'Return result to the user / AI',sub:'Verified link + asset ID + handoff',detail:'The caller receives the actual saved location and verification status; an unavailable save is reported as unsaved.'}]
+        ],
+        edges:[['capture','intake'],['intake','identify'],['identify','classify'],['classify','clear'],['classify','review',true],['clear','destination'],['review','destination',true,'After review'],['destination','persist'],['persist','verify'],['verify','index'],['index','done']]
+      },
+      memory: {
+        title:'Project continuity loop: retrieve evidence, do work, validate memory and hand off to another platform',
+        rows:[
+          [{id:'open',title:'Open a project on any platform',sub:'Same project ID · same operating protocol',detail:'Each platform starts from the project identity rather than assuming it knows another platform’s chat history.'}],
+          [{id:'retrieve',title:'Retrieve authorized context',sub:'PROJECT · CURRENT_STATE · DECISIONS · sources',detail:'The service checks permissions and retrieves canonical records with source IDs, revisions and freshness.'}],
+          [{id:'work',title:'AI or human performs the task',sub:'Evidence + tools + permitted actions',detail:'The selected platform creates work within its authority, keeping verified facts separate from proposals and unknowns.'}],
+          [{id:'handoff',title:'Save output + session handoff',sub:'What changed? What passed? What comes next?',detail:'Each session writes its own handoff and verified outputs; concurrent agents do not overwrite each other’s session records.'}],
+          [{id:'candidate',title:'Propose durable memory',sub:'Decision · preference · verified fact',detail:'Only useful durable context becomes a candidate. A generated summary is not automatically trusted memory.'}],
+          [{id:'approved',title:'Validate / confirm',sub:'Evidence + scope + date',detail:'Policy-defined validation or user confirmation establishes whether the candidate should become durable shared memory.'},{id:'uncertain',title:'Unconfirmed / conflicting',sub:'Keep as proposal',detail:'Uncertain or conflicting candidates remain proposals; the system preserves evidence without promoting them as truth.'}],
+          [{id:'reconcile',title:'Reconcile canonical state',sub:'One writer · revision checks · supersedes links',detail:'One designated process updates current state, preserving conflicts and marking older decisions superseded rather than erasing them.'}],
+          [{id:'next',title:'Resume on a different platform',sub:'Read the new state without pasting the old chat',detail:'A fresh client retrieves the verified new state. This is the acceptance test for shared continuity.'}]
+        ],
+        edges:[['open','retrieve'],['retrieve','work'],['work','handoff'],['handoff','candidate'],['candidate','approved'],['candidate','uncertain',true],['approved','reconcile'],['uncertain','reconcile',true,'Pending only'],['reconcile','next']]
+      }
+    };
+    let selected = null;
+    function el(name, attrs, text) {
+      const node=document.createElementNS(NS,name);
+      Object.entries(attrs||{}).forEach(([k,v])=>node.setAttribute(k,v));
+      if(text!==undefined)node.textContent=text;
+      return node;
+    }
+    function wrap(text, width) {
+      const out=[];
+      text.split('\n').forEach(part=>{
+        let line='';
+        part.split(' ').forEach(word=>{
+          const test=line?line+' '+word:word;
+          if(test.length*6.4>width && line){out.push(line);line=word;} else line=test;
+        });
+        if(line)out.push(line);
+      });
+      return out;
+    }
+    function draw(host,key) {
+      const width=Math.round(host.getBoundingClientRect().width);
+      if(width<1)return;
+      const data=diagrams[key], gap=12, margin=2;
+      const svg=el('svg',{role:'img','aria-label':data.title,width:width});
+      svg.append(el('title',{},data.title));
+      svg.append(el('desc',{},'Read from top to bottom. Select labeled elements for their responsibilities. Dashed connections show review or alternative paths.'));
+      const defs=el('defs');
+      const marker=el('marker',{id:'os-arrow-'+key,viewBox:'0 0 8 8',refX:7,refY:4,markerWidth:7,markerHeight:7,orient:'auto'});
+      marker.append(el('path',{d:'M 1 1 L 7 4 L 1 7',fill:'none',stroke:'var(--muted-foreground)','stroke-width':1.2}));
+      defs.append(marker);svg.append(defs);
+      let y=4;const positions={};
+      data.rows.forEach(row=>{
+        const cols=row.length;
+        for(let start=0;start<row.length;start+=cols){
+          const slice=row.slice(start,start+cols);
+          const nodeW=(width-margin*2-gap*(slice.length-1))/slice.length;
+          const rowNodes=slice.map(n=>({...n,titleLines:wrap(n.title,nodeW-24),subLines:wrap(n.sub,nodeW-24)}));
+          const h=Math.max(...rowNodes.map(n=>22+n.titleLines.length*17+8+n.subLines.length*16+15));
+          rowNodes.forEach((n,i)=>{positions[n.id]={...n,x:margin+i*(nodeW+gap),y,w:nodeW,h};});
+          y+=h+38;
+        }
+      });
+      const edgeLayer=el('g',{'aria-hidden':'true'});svg.append(edgeLayer);
+      data.edges.forEach(([from,to,dashed,label])=>{
+        const a=positions[from],b=positions[to];
+        const x1=a.x+a.w/2,y1=a.y+a.h,x2=b.x+b.w/2,y2=b.y-4;
+        let d;
+        if(y2>=y1){const mid=(y1+y2)/2;d=`M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}`;}
+        else {const side=Math.max(a.x+a.w,b.x+b.w)+2;d=`M${x1},${y1} L${side},${y1+12} L${side},${y2-12} L${x2},${y2}`;}
+        edgeLayer.append(el('path',{d,fill:'none',stroke:'var(--muted-foreground)','stroke-width':1,'stroke-dasharray':dashed?'4 4':'none','marker-end':`url(#os-arrow-${key})`}));
+        if(label && width>=520)edgeLayer.append(el('text',{x:(x1+x2)/2+7,y:(y1+y2)/2-4,class:'os-sub'},label));
+      });
+      Object.values(positions).forEach(n=>{
+        const a=el('a',{href:'#os-selected-detail',class:'cursor-interaction','aria-label':n.title+': '+n.detail});
+        const group=el('g');
+        const active=selected===n.id;
+        group.append(el('rect',{x:n.x,y:n.y,width:n.w,height:n.h,rx:8,fill:active?'color-mix(in srgb, var(--viz-series-1) 13%, var(--background))':'var(--muted)',stroke:active?'var(--viz-series-1)':'var(--border)','stroke-width':1}));
+        let ty=n.y+23;
+        n.titleLines.forEach(line=>{group.append(el('text',{x:n.x+n.w/2,y:ty,'text-anchor':'middle',class:'os-node-title'},line));ty+=17;});
+        ty+=8;
+        n.subLines.forEach(line=>{group.append(el('text',{x:n.x+n.w/2,y:ty,'text-anchor':'middle',class:'os-sub'},line));ty+=16;});
+        a.append(group);svg.append(a);
+        a.addEventListener('click',event=>{
+          event.preventDefault();selected=n.id;
+          detail.textContent=n.title+' — '+n.detail;
+          root.querySelectorAll('.os-canvas').forEach(h=>draw(h,h.dataset.diagram));
+        });
+      });
+      svg.setAttribute('height',y-32);svg.setAttribute('viewBox',`0 0 ${width} ${y-32}`);
+      host.replaceChildren(svg);
+    }
+    const resize=new ResizeObserver(entries=>entries.forEach(e=>draw(e.target,e.target.dataset.diagram)));
+    root.querySelectorAll('.os-canvas').forEach(h=>{resize.observe(h);draw(h,h.dataset.diagram);});
+  })();
+  </script>
+</div>

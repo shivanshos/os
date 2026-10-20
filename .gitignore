@@ -1,0 +1,38 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+credentials/
+secrets/
+rclone.conf
+token.json
+token-*.json
+*.key
+*.pem
+
+# Runtime and captures
+runtime/
+Outbox/
+INBOX/
+.cache/
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+*.log
+
+# Python and editor state
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+.vscode/
+
+# Temporary downloads
+*.crdownload
+*.part
+tmp/

@@ -1,0 +1,17 @@
+%% Target architecture, not deployed services.
+flowchart TD
+    U["User: iPhone, Spectre and Chrome"] --> A["AI clients and native tools"]
+    A --> M["MCP for compatible clients"]
+    A --> H["HTTP API and CLI"]
+    A --> N["Native connectors and explicit exports"]
+    M --> P["Identity and policy"]
+    H --> P
+    N -. "Intake reconciliation" .-> P
+    P --> C["OS Workspace Core"]
+    C --> S["Canonical sources: Drive, Git and designs"]
+    C --> R["Registry, curated memory and search"]
+    C --> E["Authorized workers: n8n, HPC and providers"]
+    S --> V["Verified result and handoff"]
+    R --> V
+    E --> V
+

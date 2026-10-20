@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "workspace": "os",
+  "project_id": "shivanshos",
+  "drive_root_id": "REPLACE_WITH_VERIFIED_FOLDER_ID",
+  "cloud_writes_enabled": false,
+  "default_sensitivity": "private",
+  "default_review_state": "pending",
+  "registry_mode": "single-writer",
+  "routing_mode": "dry-run",
+  "interfaces": {
+    "cli": "planned",
+    "http": "planned",
+    "mcp": "planned"
+  }
+}
