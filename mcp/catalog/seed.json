@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "workspace": "os",
+  "integrations": [
+    {"id":"os.registry","name":"OS MCP Registry","category":"control","adapter":"mcp","host":"spectre","transport":"stdio","status":"planned","capabilities":["catalog.search","catalog.read"],"permission":"read-only","notes":"Local discovery adapter; mark verified only after a successful MCP client tools/list call."},
+    {"id":"os.workspace","name":"OS Workspace Core","category":"knowledge","adapter":"planned_adapter","host":"spectre","transport":"undetermined","status":"planned","capabilities":["files.index","memory.handoff"],"permission":"approval-required","notes":"Separate service; registry must not claim that Workspace Core is deployed."},
+    {"id":"github","name":"GitHub","category":"development","adapter":"native_connector","host":"cloud","transport":"native","status":"planned","capabilities":["repos.read","files.read","commits.write"],"permission":"approval-required","notes":"Connector access depends on individual client/app authorization; no OS-wide token is assumed."},
+    {"id":"google-drive","name":"Google Drive","category":"knowledge","adapter":"native_connector","host":"cloud","transport":"native","status":"planned","capabilities":["files.discover","files.read","files.write"],"permission":"approval-required","notes":"Canonical cloud documents when user has verified permissions; no automatic synchronization."},
+    {"id":"box","name":"Box","category":"knowledge","adapter":"native_connector","host":"cloud","transport":"native","status":"planned","capabilities":["files.discover","files.read"],"permission":"read-only","notes":"Verify connector availability and ownership per client."},
+    {"id":"notion","name":"Notion","category":"knowledge","adapter":"native_connector","host":"cloud","transport":"native","status":"planned","capabilities":["pages.read","pages.write"],"permission":"approval-required","notes":"Native connector is not automatically a public MCP endpoint."},
+    {"id":"obsidian","name":"Obsidian Vault","category":"knowledge","adapter":"planned_adapter","host":"spectre","transport":"undetermined","status":"planned","capabilities":["vault.read"],"permission":"read-only","notes":"Explicit allowlisted vault path required prior to enablement."},
+    {"id":"n8n","name":"n8n Workflows","category":"automation","adapter":"http_service","host":"hpc","transport":"http","status":"planned","capabilities":["workflows.trigger"],"permission":"approval-required","notes":"Existing service is not automatically an MCP server; verify remote routing and auth."},
+    {"id":"ollama","name":"Ollama Inference","category":"inference","adapter":"http_service","host":"hpc","transport":"http","status":"planned","capabilities":["models.list","inference.generate"],"permission":"approval-required","notes":"Endpoint is host-local on HPC in past observations, not reachable from Spectre without separate connection."},
+    {"id":"open-webui","name":"Open WebUI","category":"interface","adapter":"http_service","host":"hpc","transport":"http","status":"planned","capabilities":["chat.ui"],"permission":"approval-required","notes":"Do not mistake web UI for MCP; verify before adding a bridge."},
+    {"id":"docker","name":"Docker MCP Gateway","category":"infrastructure","adapter":"planned_adapter","host":"spectre","transport":"undetermined","status":"planned","capabilities":["mcp.proxy","mcp.catalog"],"permission":"approval-required","notes":"Optional next phase; do not mount Docker socket into an exposed MCP process by default."},
+    {"id":"home-assistant","name":"Home Assistant","category":"devices","adapter":"planned_adapter","host":"undetermined","transport":"undetermined","status":"planned","capabilities":["devices.read","devices.control"],"permission":"approval-required","notes":"Never enable actuator controls without explicit scope and confirmations."},
+    {"id":"figma","name":"Figma","category":"design","adapter":"native_connector","host":"cloud","transport":"native","status":"planned","capabilities":["design.read","design.edit"],"permission":"approval-required","notes":"Editable native artifacts remain authoritative in Figma."},
+    {"id":"adobe","name":"Adobe","category":"design","adapter":"native_connector","host":"cloud","transport":"native","status":"planned","capabilities":["assets.read","assets.edit"],"permission":"approval-required","notes":"Native source of truth for editable Adobe assets."},
+    {"id":"cloudflare","name":"Cloudflare","category":"domain","adapter":"planned_adapter","host":"cloud","transport":"undetermined","status":"planned","capabilities":["dns.read","dns.write"],"permission":"approval-required","notes":"Do not attach the shivanshsethi.in zone or mutate DNS without verification."},
+    {"id":"bitwarden","name":"Credential Broker","category":"security","adapter":"planned_adapter","host":"spectre","transport":"undetermined","status":"planned","capabilities":["secret.reference"],"permission":"approval-required","notes":"Store references only, never vault contents or token values."}
+  ],
+  "collections": [
+    {"id":"os-core","name":"OS Core","description":"Workspace and registry discovery; no implicit write permissions.","members":["os.registry","os.workspace"]},
+    {"id":"knowledge","name":"Knowledge and Research","description":"Provider-native sources and governed project context.","members":["os.registry","google-drive","box","notion","obsidian"]},
+    {"id":"development","name":"Development","description":"Repositories and scoped development tooling.","members":["os.registry","github","docker"]},
+    {"id":"automation","name":"Automation and Inference","description":"Workflows and HPC model services; require verification.","members":["os.registry","n8n","ollama","open-webui"]},
+    {"id":"design","name":"Creative Studio","description":"Design sources remain authoritative on their platforms.","members":["os.registry","figma","adobe"]},
+    {"id":"systems","name":"Systems, Domain, Security","description":"High-trust infrastructure inventory, not open execution.","members":["os.registry","home-assistant","cloudflare","bitwarden"]}
+  ]
+}
