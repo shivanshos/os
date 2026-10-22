@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "shivanshos-os-registry": {
+      "command": "/home/REPLACE_USER/OS/mcp/.venv/bin/os-mcp-server",
+      "env": {
+        "OS_MCP_DB": "/home/REPLACE_USER/.local/share/shivanshos/mcp-registry/registry.sqlite3"
+      }
+    }
+  }
+}
