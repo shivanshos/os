@@ -32,6 +32,12 @@ __pycache__/
 .DS_Store
 .vscode/
 
+# Cloudflare Worker development
+node_modules/
+.wrangler/
+.dev.vars*
+!.dev.vars.example
+
 # Temporary downloads
 *.crdownload
 *.part

@@ -1,0 +1,16 @@
+{
+  "name": "os-private-resource-catalog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-catalog.mjs",
+    "check": "tsc --noEmit",
+    "dev": "npm run build && wrangler dev",
+    "test": "node --test",
+    "deploy": "npm run build && node scripts/deploy-existing-worker.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2",
+    "wrangler": "4.152.0"
+  }
+}

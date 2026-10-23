@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 21 October 2026, Asia/Kolkata.
+Updated: 23 October 2026, Asia/Kolkata.
 
 ## Available
 
@@ -9,6 +9,7 @@ Updated: 21 October 2026, Asia/Kolkata.
 - System-map, file-journey and memory-loop diagram source.
 - Proposed Workspace Core and MCP tool boundaries.
 - Spectre bootstrap commands and Antigravity implementation brief.
+- Static resource-catalog UI source with an allowlisted projection of integration names, categories and statuses. All 16 seed entries remain marked `planned`; this is not a live connection check.
 
 Documentation commands received shell/Python syntax checks during authoring. The workspace bootstrap was exercised in an isolated temporary home-path fixture and preserved existing records on a second run. These checks do not certify execution on Spectre or access to the user's Drive.
 
@@ -22,6 +23,8 @@ The inline diagram's JavaScript was exercised with a lightweight DOM test for di
 - Verified output-save service and memory reconciliation.
 - Custom MCP server, remote authenticated endpoint or client installation.
 - Automated n8n workflows or device/infrastructure orchestration.
+- Cloudflare Access application, hostname policy, Worker deployment and DNS for `studio.os.shivanshsethi.in`.
+- Full private Workspace Core, live provider connections and resource writes.
 
 ## Next milestone: local registry
 
@@ -33,4 +36,4 @@ The inline diagram's JavaScript was exercised with a lightweight DOM test for di
 6. Add a verified explicit save path with durable receipts.
 7. Add a thin local MCP interface over the same service operations.
 
-Remote access, background automation, vector retrieval and infrastructure orchestration follow demonstrated need and passing acceptance checks.
+The static catalog is not a replacement for the Workspace Core. Remote hosting remains blocked until an Access application restricted to the approved Google identity is in place and the existing Worker is identified in the authenticated Cloudflare account. See [private catalog deployment](private-catalog-deployment.md).

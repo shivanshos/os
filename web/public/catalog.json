@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0",
+  "integrations": [
+    {
+      "id": "n8n",
+      "name": "n8n Workflows",
+      "category": "automation",
+      "status": "planned"
+    },
+    {
+      "id": "os.registry",
+      "name": "OS MCP Registry",
+      "category": "control",
+      "status": "planned"
+    },
+    {
+      "id": "adobe",
+      "name": "Adobe",
+      "category": "design",
+      "status": "planned"
+    },
+    {
+      "id": "figma",
+      "name": "Figma",
+      "category": "design",
+      "status": "planned"
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "category": "development",
+      "status": "planned"
+    },
+    {
+      "id": "home-assistant",
+      "name": "Home Assistant",
+      "category": "devices",
+      "status": "planned"
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "category": "domain",
+      "status": "planned"
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama Inference",
+      "category": "inference",
+      "status": "planned"
+    },
+    {
+      "id": "docker",
+      "name": "Docker MCP Gateway",
+      "category": "infrastructure",
+      "status": "planned"
+    },
+    {
+      "id": "open-webui",
+      "name": "Open WebUI",
+      "category": "interface",
+      "status": "planned"
+    },
+    {
+      "id": "box",
+      "name": "Box",
+      "category": "knowledge",
+      "status": "planned"
+    },
+    {
+      "id": "google-drive",
+      "name": "Google Drive",
+      "category": "knowledge",
+      "status": "planned"
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "category": "knowledge",
+      "status": "planned"
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian Vault",
+      "category": "knowledge",
+      "status": "planned"
+    },
+    {
+      "id": "os.workspace",
+      "name": "OS Workspace Core",
+      "category": "knowledge",
+      "status": "planned"
+    },
+    {
+      "id": "bitwarden",
+      "name": "Credential Broker",
+      "category": "security",
+      "status": "planned"
+    }
+  ],
+  "collections": [
+    {
+      "id": "automation",
+      "name": "Automation and Inference"
+    },
+    {
+      "id": "design",
+      "name": "Creative Studio"
+    },
+    {
+      "id": "development",
+      "name": "Development"
+    },
+    {
+      "id": "knowledge",
+      "name": "Knowledge and Research"
+    },
+    {
+      "id": "os-core",
+      "name": "OS Core"
+    },
+    {
+      "id": "systems",
+      "name": "Systems, Domain, Security"
+    }
+  ]
+}

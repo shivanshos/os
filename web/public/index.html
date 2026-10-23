@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b0d0e">
+    <meta name="description" content="A curated catalog of OS integrations, collections and project guides.">
+    <title>OS Resource Catalog</title>
+    <link rel="icon" href="/assets/os-mark-solid-512.png" type="image/png">
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="#overview" aria-label="OS Resource Catalog home">
+        <img src="/assets/os-mark-solid-512.png" alt="" width="40" height="40">
+        <span>shivanshos <span class="brand-divider">/</span> OS</span>
+      </a>
+      <nav class="primary-nav" aria-label="Main navigation">
+        <a href="#integrations">Integrations</a>
+        <a href="#collections">Collections</a>
+        <a href="#guides">Guides</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="overview" aria-labelledby="page-title">
+        <p class="eyebrow">Studio / Resource catalog</p>
+        <h1 id="page-title">A clearer map of the tools around your work.</h1>
+        <p class="hero-copy">
+          Browse the OS integration plan, its curated collections and the documents
+          that explain how the workspace is intended to work.
+        </p>
+        <p class="catalog-note">
+          Every integration shown here is <strong>planned</strong>, not verified as connected.
+          This catalog does not provide provider access or run actions.
+        </p>
+      </section>
+
+      <section class="content-section" id="integrations" aria-labelledby="integrations-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / Discovery</p>
+            <h2 id="integrations-title">Integrations</h2>
+          </div>
+          <p class="section-intro">Names and planning status only; no account or endpoint details.</p>
+        </div>
+        <div class="filters">
+          <label class="filter-field">
+            <span>Search integrations</span>
+            <input id="resource-search" type="search" autocomplete="off" placeholder="Search by name or category">
+          </label>
+          <label class="filter-field">
+            <span>Category</span>
+            <select id="category-filter">
+              <option value="">All categories</option>
+              <option value="automation">Automation</option>
+              <option value="control">Control</option>
+              <option value="devices">Devices</option>
+              <option value="development">Development</option>
+              <option value="design">Design</option>
+              <option value="domain">Domain</option>
+              <option value="inference">Inference</option>
+              <option value="infrastructure">Infrastructure</option>
+              <option value="interface">Interface</option>
+              <option value="knowledge">Knowledge</option>
+              <option value="security">Security</option>
+            </select>
+          </label>
+        </div>
+        <p id="catalog-status" class="status-message" role="status" aria-live="polite">Loading catalog…</p>
+        <div id="integration-list" class="integration-grid" aria-label="Integration catalog"></div>
+      </section>
+
+      <section class="content-section" id="collections" aria-labelledby="collections-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / Grouping</p>
+            <h2 id="collections-title">Collections</h2>
+          </div>
+          <p class="section-intro">Curated views group related tools without implying access.</p>
+        </div>
+        <div id="collection-list" class="collection-grid"></div>
+      </section>
+
+      <section class="content-section" id="guides" aria-labelledby="guides-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">03 / Project context</p>
+            <h2 id="guides-title">Guides</h2>
+          </div>
+          <p class="section-intro">Read the source documents in the public OS repository.</p>
+        </div>
+        <div class="guide-grid">
+          <a class="guide-card" href="https://github.com/shivanshos/os/blob/main/docs/concept-wiring-deployment.md">
+            <span class="guide-index">01</span>
+            <strong>Concept, wiring and deployment</strong>
+            <span>System map, boundaries and staged deployment direction.</span>
+          </a>
+          <a class="guide-card" href="https://github.com/shivanshos/os/blob/main/docs/workspace-core-mcp.md">
+            <span class="guide-index">02</span>
+            <strong>Workspace Core and MCP</strong>
+            <span>Proposed service responsibilities and access boundaries.</span>
+          </a>
+          <a class="guide-card" href="https://github.com/shivanshos/os/blob/main/docs/file-tagging-and-sorting.md">
+            <span class="guide-index">03</span>
+            <strong>File tagging and sorting</strong>
+            <span>Provenance, review and lifecycle rules for managed files.</span>
+          </a>
+          <a class="guide-card" href="https://github.com/shivanshos/os/blob/main/docs/STATUS.md">
+            <span class="guide-index">04</span>
+            <strong>Implementation status</strong>
+            <span>What exists, what remains proposed and the next milestone.</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>shivanshos / OS</span>
+      <a href="https://github.com/shivanshos/os">Source and project history</a>
+    </footer>
+  </body>
+</html>

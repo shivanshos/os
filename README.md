@@ -16,6 +16,9 @@ Architecture and deployment documentation are available. The workspace service, 
 - [Workspace Core and MCP design](docs/workspace-core-mcp.md)
 - [Implementation status and next milestone](docs/STATUS.md)
 - [Diagram sources](docs/diagrams/README.md)
+- [Private resource catalog deployment](docs/private-catalog-deployment.md)
+
+The `web/` catalog is a static presentation of the repository's planned integrations and collections. It does not connect to providers or implement the Workspace Core. Its source and catalog are public in this repository; the hosted hostname must be protected by a verified Cloudflare Access policy before deployment.
 
 The deployment guide includes manual and agent-assisted instructions for Ubuntu/Spectre, Antigravity, Chrome, iPhone, Google Drive, ChatGPT, Claude, Gemini, Perplexity, Acrobat, notebook research, local AI, n8n and supporting project tools.
 
@@ -55,4 +58,4 @@ This repository contains versioned architecture, standards, deployment instructi
 
 Project documents and runtime data are separate. Do not synchronize a live `.git` directory or shared SQLite database through Drive. The [example workspace manifest](examples/workspace.example.json) contains placeholders, not live credentials.
 
-No public hosting, service installation, repository visibility change or open-source license grant is performed by this documentation commit.
+No Worker hosting or service installation has been performed. The repo remains public as before; no repository visibility change or open-source license grant is implied by the catalog source.
