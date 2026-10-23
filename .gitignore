@@ -37,6 +37,7 @@ node_modules/
 .wrangler/
 .dev.vars*
 !.dev.vars.example
+.cloudflare-cli.env
 
 # Temporary downloads
 *.crdownload

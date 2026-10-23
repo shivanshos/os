@@ -6,8 +6,12 @@
     "build": "node scripts/build-catalog.mjs",
     "check": "tsc --noEmit",
     "dev": "npm run build && wrangler dev",
+    "list-workers": "node --env-file=.cloudflare-cli.env scripts/list-workers.mjs",
     "test": "node --test",
-    "deploy": "npm run build && node scripts/deploy-existing-worker.mjs"
+    "deploy": "npm run build && node --env-file=.cloudflare-cli.env scripts/deploy-existing-worker.mjs"
+  },
+  "engines": {
+    "node": ">=20.6.0"
   },
   "devDependencies": {
     "typescript": "^5.5.2",

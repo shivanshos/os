@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { projectCatalog } from "../scripts/build-catalog.mjs";
+import { workerNamesFromResponse } from "../scripts/list-workers.mjs";
 
 const seedUrl = new URL("../../mcp/catalog/seed.json", import.meta.url);
 const seed = JSON.parse(await readFile(seedUrl, "utf8"));
@@ -41,4 +42,22 @@ test("catalog projection rejects invalid statuses", () => {
     collections: [],
   };
   assert.throws(() => projectCatalog(invalidSeed), /valid id, name, category and status/);
+});
+
+test("worker discovery returns sorted unique script names only", () => {
+  const names = workerNamesFromResponse({
+    success: true,
+    result: [
+      { id: "worker-z", secret: "ignored" },
+      { id: "worker-a" },
+      { id: "worker-a" },
+      null,
+      "invalid",
+    ],
+  });
+  assert.deepEqual(names, ["worker-a", "worker-z"]);
+});
+
+test("worker discovery rejects invalid API responses", () => {
+  assert.throws(() => workerNamesFromResponse({ success: false, result: [] }), /invalid Worker list/);
 });
