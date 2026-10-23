@@ -9,8 +9,8 @@ The repository and generated catalog are public. Cloudflare Access protects the 
 ## Before deployment
 
 1. Keep `os.shivanshsethi.in` on the existing Framer landing page. This app targets only `studio.os.shivanshsethi.in`.
-2. In Cloudflare Zero Trust, confirm Google is an enabled identity provider. Create a self-hosted Access application for the exact hostname `studio.os.shivanshsethi.in` and an **Allow** policy matching only `x@shivanshsethi.in`. Do not use an `Everyone` or domain-wide policy.
-3. Verify the Access application and policy are active before attaching the Worker custom domain. Cloudflare documents that a hostname without an Access application is public.
+2. An unauthenticated request to `studio.os.shivanshsethi.in` returned an HTTP 302 to the Cloudflare Access login endpoint during this task. In Cloudflare Zero Trust, inspect the existing application rather than creating a duplicate. Confirm Google is enabled and the **Allow** policy matches only `x@shivanshsethi.in`; do not use an `Everyone` or domain-wide policy.
+3. Verify that the Access application and policy are active before changing the Worker. Cloudflare documents that a hostname without an Access application is public.
 4. Authenticate to the intended Cloudflare account with an account-scoped API token stored outside Git, with only the permissions needed to deploy the existing Worker and manage its custom domain. Never pass token values on a command line or commit them.
 5. Identify the exact existing Worker name in that account. The deploy script refuses to run without it and checks that Wrangler can read its deployment list before it deploys.
 
