@@ -108,6 +108,14 @@ class AuthorizationTests(unittest.TestCase):
     def test_unknown_classification_denied(self):
         self.assertFalse(self.check(resource={"project_id": "OS"}).allowed)
 
+    def test_malformed_records_fail_closed(self):
+        self.assertFalse(self.check(directory=None if False else []).allowed)
+        self.assertFalse(self.check(resource={"project_id": "OS",
+            "classification": []}).allowed)
+        d = fixture()
+        d["users"][0]["projects"]["OS"]["role"] = []
+        self.assertFalse(self.check(directory=d).allowed)
+
     def test_missing_permissions_never_inherit_role(self):
         d = fixture()
         del d["users"][0]["projects"]["OS"]["permissions"]
