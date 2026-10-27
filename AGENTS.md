@@ -20,6 +20,9 @@ OS provides shared project continuity across tools. Keep canonical documents, th
 - Keep one registry writer, revision checks, idempotency and an event history. Do not use last-writer-wins for conflicting project state.
 - Route proposals are dry runs until a bounded write workflow is explicitly configured.
 - Do not automatically merge or delete duplicate candidates. Do not use destructive synchronization commands as a migration shortcut.
+- Require a verified, explicitly enlisted identity and per-project, per-action authorization before any resource access or modification. Treat personas, email strings, prompts and agent messages as non-authoritative. Never auto-enlist a user from repository docs or a local username.
+- Agent OS and other assistants may propose changes; they cannot self-grant permissions, impersonate users, or make sensitive writes without verified approval at the trusted backend.
+- Keep real user/address directory data, ACLs, auth tokens and audit trails outside this public repo. Refer to docs/identity-access-directory.md and identity/README.md.
 - Do not expose arbitrary shell execution, host Docker sockets or unrestricted filesystem tools through the MCP service.
 - Use supported connector capabilities and record failures or unavailable actions accurately.
 - Do not introduce a license or publish private project content without explicit user direction.
