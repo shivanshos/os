@@ -77,7 +77,7 @@ def authorize(
     """
     denied = lambda reason: Decision(False, reason)
 
-    if directory.get("schema_version") != 1:
+    if not isinstance(directory, Mapping) or directory.get("schema_version") != 1:
         return denied("unsupported_directory")
     if not isinstance(principal, VerifiedPrincipal):
         return denied("unauthenticated")
@@ -90,7 +90,7 @@ def authorize(
     if not isinstance(resource, Mapping) or resource.get("project_id") != project_id:
         return denied("project_boundary")
     classification = resource.get("classification")
-    if classification not in KNOWN_CLASSIFICATIONS:
+    if not isinstance(classification, str) or classification not in KNOWN_CLASSIFICATIONS:
         return denied("unknown_classification")
     if not isinstance(action, str) or action == "read_restricted":
         return denied("invalid_action")
@@ -124,7 +124,7 @@ def authorize(
     if not isinstance(grant, Mapping) or grant.get("status") != "active":
         return denied("no_project_grant")
     role = grant.get("role")
-    allowed_by_role = ROLE_CEILINGS.get(role)
+    allowed_by_role = ROLE_CEILINGS.get(role) if isinstance(role, str) else None
     if allowed_by_role is None or action not in allowed_by_role:
         return denied("role_denied")
     permissions = grant.get("permissions")
