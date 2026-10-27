@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated: 23 October 2026, Asia/Kolkata.
+Updated: 27 October 2026, Asia/Kolkata.
 
 ## Available
 
@@ -15,6 +15,15 @@ Updated: 23 October 2026, Asia/Kolkata.
 Documentation commands received shell/Python syntax checks during authoring. The workspace bootstrap was exercised in an isolated temporary home-path fixture and preserved existing records on a second run. These checks do not certify execution on Spectre or access to the user's Drive.
 
 The inline diagram's JavaScript was exercised with a lightweight DOM test for diagram creation, node selection and geometry at 320, 360 and 736 pixels. A real browser visual test remains outstanding because the authoring environment had no installed Playwright browser. The PDF was rendered and visually inspected.
+
+## New reference implementation (27 October 2026)
+
+- `identity/policy.py`: proposed fail-closed authorization decision function, including explicit project and action grants, subject/email verification input, role ceilings, classification checks, approval and MFA gates.
+- `identity/examples/directory.example.json`: synthetic directory record only; **no real users have been enrolled**.
+- `identity/tests/test_policy.py`: tests for allowlist, role, project, revocation, restricted resource, expiry and high-risk operation boundaries. CI execution and runtime integration are not yet verified by this status entry.
+- `docs/identity-access-directory.md`: canonical design for the User & Address Directory, provider enforcement and Agent OS restrictions.
+
+This change does **not** activate access restrictions on HPC, Spectre, Auth0, Cloudflare Access, Open WebUI, GitHub, Drive or the MCP/Workspace Core. The reference decision code is not a token verifier and cannot protect a service until integrated at its trusted server boundary.
 
 ## Not implemented or verified here
 
