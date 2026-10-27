@@ -14,6 +14,7 @@ Architecture and deployment documentation are available. The workspace service, 
 - [PDF deployment manual](docs/pdf/OS_Concept_Wiring_and_Deployment_Manual_v1.pdf)
 - [File tagging and sorting standard](docs/file-tagging-and-sorting.md)
 - [Workspace Core and MCP design](docs/workspace-core-mcp.md)
+- [User & Address Directory / identity access architecture](docs/identity-access-directory.md)
 - [Implementation status and next milestone](docs/STATUS.md)
 - [Diagram sources](docs/diagrams/README.md)
 - [Private resource catalog deployment](docs/private-catalog-deployment.md)
@@ -59,3 +60,7 @@ This repository contains versioned architecture, standards, deployment instructi
 Project documents and runtime data are separate. Do not synchronize a live `.git` directory or shared SQLite database through Drive. The [example workspace manifest](examples/workspace.example.json) contains placeholders, not live credentials.
 
 No Worker hosting or service installation has been performed. The repo remains public as before; no repository visibility change or open-source license grant is implied by the catalog source.
+
+## Identity directory boundary
+
+The `identity/` directory contains a **public reference authorization policy, tests and synthetic examples**, not real user accounts. Production identities, verified email addresses, contact records, project grants, audit events and approval records belong in a separate private store. Enrollment alone never grants project access; permitted users require project-specific explicit actions. Until a verified IdP, resource gateway and backend integration are deployed, the policy code does **not** protect existing services.

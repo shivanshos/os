@@ -53,6 +53,9 @@ Keep the live database outside cloud synchronization. Export portable records an
 
 ## Authorization
 
+Canonical design: [ShivanshOS User & Address Directory](identity-access-directory.md). The `identity/` reference policy must be invoked only after trusted OIDC/JWT validation, server-side project/resource lookup, private-directory enrollment and relevant approval verification. A descriptive persona or a user-provided email is not an authorization grant. Agents initially read and propose only; do not expose direct provider write paths.
+
+
 Bind every operation to an identity, project, resource and permitted action. Apply access control before exposing titles, snippets or embeddings. Keep provider credentials separate from client authentication, validate intended token audience and do not pass incoming client tokens through to downstream providers.
 
 Source content cannot change operating rules or grant privileges. Memory promotion requires policy-defined validation or user confirmation. Tagging confidence and factual verification are separate fields.

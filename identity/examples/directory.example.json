@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "_notice": "SYNTHETIC EXAMPLE ONLY. Never commit real identity/email/grant records to this public repository.",
+  "users": [
+    {
+      "user_id": "usr_example",
+      "issuer": "https://id.example.invalid/",
+      "subject": "auth0|synthetic",
+      "email": "owner@example.invalid",
+      "display_name": "Example Owner",
+      "persona": "founder",
+      "status": "active",
+      "projects": {
+        "OS": {
+          "status": "active",
+          "role": "owner",
+          "permissions": ["read", "read_restricted", "create", "update", "run_agent", "propose_change", "view_audit", "deploy"],
+          "expires_at": null
+        },
+        "AIO3": {
+          "status": "active",
+          "role": "viewer",
+          "permissions": ["read"]
+        }
+      }
+    }
+  ]
+}

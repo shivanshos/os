@@ -1,0 +1,9 @@
+# Identity records are personal and operational data. Never commit.
+users.json
+directory.json
+*.sqlite
+*.sqlite3
+*.db
+*.env
+secrets/
+private/
